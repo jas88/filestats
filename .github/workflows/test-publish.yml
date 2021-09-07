@@ -1,0 +1,33 @@
+name: Test and publish
+
+on:
+  ["push","pull_request"]
+
+jobs:
+  build:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name : coverlet
+      run: |
+        dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
+        mv Tests.FileStats/TestResults/*/coverage.info lcov.info
+    - name: coveralls      
+      uses: coverallsapp/github-action@v1.1.1
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN }} 
+        path-to-lcov: 'lcov.info'
+    - name: Build
+      run: ./build.sh
+    - name: Upload binaries to release
+      if: contains(github.ref, 'refs/tags/v')
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: filestats-win.zip
+        asset_name: filestats-win.zip
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "Windows release zip"
