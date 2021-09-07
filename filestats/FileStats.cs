@@ -3,18 +3,26 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
+using CommandLine;
 using Microsoft.Data.Sqlite;
 
 namespace fileStats
 {
-    static class FileStats
+    public static class FileStats
     {
-        public static void Scan(FileSystem fs = null)
+        public class Options {
+            [Option('d',"debug",Required =false,HelpText ="Show debug information while running")]
+            public bool Debug { get; set; }
+        }
+
+        public static void Scan(Options o,FileSystem fs = null)
         {
             fs ??= new FileSystem();
             var cwd = fs.Directory.GetCurrentDirectory();
 
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
+            if (o.Debug)
+                Console.WriteLine($"Caching in '{path}'");
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             var dbs = new SqliteConnectionStringBuilder
             {
@@ -62,7 +70,9 @@ namespace fileStats
             using (var cleanup = new SqliteCommand("DELETE FROM dirCache WHERE parent=@parent AND seen=0",db,trans))
             {
                 cleanup.Parameters.AddWithValue("@parent", cwd);
-                Console.WriteLine($"Expired {cleanup.ExecuteNonQuery()} old cache entries");
+                var n = cleanup.ExecuteNonQuery();
+                if (o.Debug)
+                    Console.WriteLine($"Expired {n} old cache entries");
             }
 
             using (var stats =
@@ -87,9 +97,9 @@ namespace fileStats
             return $"{(Math.Sign(byteCount) * num).ToString(CultureInfo.InvariantCulture)}{suf[place]}";
         }
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Scan();
+            Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o)).WithNotParsed(o=>Console.WriteLine($"{o}"));
         }
     }
 }
