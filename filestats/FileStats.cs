@@ -15,7 +15,7 @@ namespace fileStats
             public bool Debug { get; set; }
         }
 
-        public static void Scan(Options o,FileSystem fs = null)
+        public static void Scan(Options o,FileSystem? fs = null)
         {
             fs ??= new FileSystem();
             var cwd = fs.Directory.GetCurrentDirectory();
@@ -48,22 +48,30 @@ namespace fileStats
             populate.Parameters.Add("@vol", SqliteType.Integer);
             foreach (var dir in fs.Directory.GetDirectories(cwd))
             {
-                setSeen.Parameters["@name"] = new SqliteParameter("@name",dir);
-                if (setSeen.ExecuteNonQuery() != 0) continue;
-                long num=0,vol=0;
-
-                // Cache miss: find the size the hard way, then cache it
-                foreach (var f in fs.Directory.EnumerateFiles(Path.Combine(cwd, dir), "*", SearchOption.AllDirectories))
+                try
                 {
-                    var info = fs.FileInfo.FromFileName(f);
-                    num++;
-                    vol += info.Length;
-                }
+                    setSeen.Parameters["@name"] = new SqliteParameter("@name", dir);
+                    if (setSeen.ExecuteNonQuery() != 0) continue;
+                    long num = 0, vol = 0;
 
-                populate.Parameters["@name"] = new SqliteParameter("@name", dir);
-                populate.Parameters["@num"] = new SqliteParameter("@num", num);
-                populate.Parameters["@vol"] = new SqliteParameter("@vol", vol);
-                populate.ExecuteNonQuery();
+                    // Cache miss: find the size the hard way, then cache it
+                    foreach (var f in fs.Directory.EnumerateFiles(Path.Combine(cwd, dir), "*",
+                        SearchOption.AllDirectories))
+                    {
+                        var info = fs.FileInfo.FromFileName(f);
+                        num++;
+                        vol += info.Length;
+                    }
+
+                    populate.Parameters["@name"] = new SqliteParameter("@name", dir);
+                    populate.Parameters["@num"] = new SqliteParameter("@num", num);
+                    populate.Parameters["@vol"] = new SqliteParameter("@vol", vol);
+                    populate.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"Error scanning '{dir}': '{e}'");
+                }
             }
 
             // Now expire old entries and report the totals:
