@@ -71,6 +71,8 @@ namespace fileStats
                 catch (Exception e)
                 {
                     Console.Error.WriteLine($"Error scanning '{dir}': '{e}'");
+                    trans.Commit();
+                    return;
                 }
             }
 
