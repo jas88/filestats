@@ -15,7 +15,7 @@ namespace fileStats
             [Option('d',"debug",Required =false,HelpText ="Show debug information while running")]
             public bool Debug { get; set; }
             
-            [Option('r',"retries",Required = false,Default = 10,Min=0,Max=1000,HelpText="How many times to retry after errors")]
+            [Option('r',"retries",Required = false,Default = 10,HelpText="How many times to retry after errors")]
             public int Retries { get; set; }
             
             [Option('c',"cachepath",Required =false,Default=null,HelpText = "Directory location to store cache data")]
