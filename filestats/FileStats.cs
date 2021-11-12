@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using CommandLine;
+using CommandLine.Text;
 using Microsoft.Data.Sqlite;
 
 namespace fileStats
@@ -13,20 +14,25 @@ namespace fileStats
         public class Options {
             [Option('d',"debug",Required =false,HelpText ="Show debug information while running")]
             public bool Debug { get; set; }
+            
+            [Option('r',"retries",Required = false,Default = 10,Min=0,Max=1000,HelpText="How many times to retry after errors")]
+            public int Retries { get; set; }
+            
+            [Option('c',"cachepath",Required =false,Default=null,HelpText = "Directory location to store cache data")]
+            public string? CachePath { get; set; }
         }
 
-        public static void Scan(Options o,FileSystem? fs = null)
+        public static void Scan(Options o, string dbpath, int retries = 10, FileSystem? fs = null)
         {
             fs ??= new FileSystem();
             var cwd = fs.Directory.GetCurrentDirectory();
 
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
             if (o.Debug)
-                Console.WriteLine($"Caching in '{path}'");
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+                Console.WriteLine($"Caching in '{dbpath}'");
+            Directory.CreateDirectory(Path.GetDirectoryName(dbpath));
             var dbs = new SqliteConnectionStringBuilder
             {
-                DataSource = path
+                DataSource = dbpath
             };
             using var db = new SqliteConnection(dbs.ConnectionString);
             db.Open();
@@ -72,7 +78,9 @@ namespace fileStats
                 {
                     Console.Error.WriteLine($"Error scanning '{dir}': '{e}'");
                     trans.Commit();
-                    return;
+                    if (retries<=0)
+                        return;
+                    Scan(o,dbpath, retries-1, fs);
                 }
             }
 
@@ -109,7 +117,8 @@ namespace fileStats
 
         public static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o)).WithNotParsed(o=>Console.WriteLine($"{o}"));
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
+            Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o,o.CachePath??path, o.Retries)).WithNotParsed(o=>Console.WriteLine($"{o}"));
         }
     }
 }
