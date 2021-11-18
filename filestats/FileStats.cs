@@ -94,12 +94,12 @@ namespace fileStats
             }
 
             using (var stats =
-                new SqliteCommand("SELECT SUM(num),SUM(vol) FROM dirCache WHERE parent=@parent", db, trans))
+                new SqliteCommand("SELECT COUNT(*),SUM(num),SUM(vol) FROM dirCache WHERE parent=@parent", db, trans))
             {
                 stats.Parameters.AddWithValue("@parent", cwd);
                 var r=stats.ExecuteReader();
                 r.Read();
-                Console.WriteLine($"Found {r.GetInt64(0)} files, total {r.GetInt64(1)} bytes ({BytesToString(r.GetInt64(1))})");
+                Console.WriteLine($"Found {r.GetInt64(0)} directories containing {r.GetInt64(1)} files, total {r.GetInt64(2)} bytes ({BytesToString(r.GetInt64(2))})");
             }
             trans.Commit();
         }
