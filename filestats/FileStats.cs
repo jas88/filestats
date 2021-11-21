@@ -78,9 +78,9 @@ namespace fileStats
                 {
                     Console.Error.WriteLine($"Error scanning '{dir}': '{e}'");
                     trans.Commit();
-                    if (retries<=0)
-                        return;
-                    Scan(o,dbpath, retries-1, fs);
+                    if (retries>0)
+                        Scan(o,dbpath, retries-1, fs);
+                    return;
                 }
             }
 
