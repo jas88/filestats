@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.5" />
-    <PackageReference Include="System.IO.Abstractions" Version="19.2.16" />
+    <PackageReference Include="System.IO.Abstractions" Version="19.2.18" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
 
