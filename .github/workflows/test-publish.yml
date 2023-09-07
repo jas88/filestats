@@ -18,7 +18,7 @@ jobs:
         dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
         mv Tests.FileStats/TestResults/*/coverage.info lcov.info
     - name: coveralls      
-      uses: coverallsapp/github-action@v2.2.1
+      uses: coverallsapp/github-action@v2.2.3
       with:
         github-token: ${{secrets.GITHUB_TOKEN }} 
         path-to-lcov: 'lcov.info'
