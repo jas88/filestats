@@ -4,7 +4,7 @@ using System;
 
 namespace Tests.FileStats;
 
-public class Tests
+file sealed class Tests
 {
     [Test]
     public void Test1()
@@ -13,7 +13,7 @@ public class Tests
         using var stderr = new StringWriter();
         Console.SetOut(stdout);
         Console.SetError(stderr);
-        fileStats.FileStats.Main(new[] { "--bad" });
-        Assert.That(stderr.ToString().Contains("Option 'bad' is unknown"));
+        fileStats.FileStats.Main(["--bad"]);
+        Assert.That(stderr.ToString(), Does.Contain("Option 'bad' is unknown"));
     }
 }

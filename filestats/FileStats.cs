@@ -3,32 +3,36 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using CommandLine;
+using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
 
 namespace fileStats;
 
 public static class FileStats
 {
-    public class Options {
+    [UsedImplicitly]
+    public sealed class Options {
         [Option('d',"debug",Required =false,HelpText ="Show debug information while running")]
-        public bool Debug { get; set; }
-            
+        public bool Debug { get; [UsedImplicitly] set; }
+
         [Option('r',"retries",Required = false,Default = 10,HelpText="How many times to retry after errors")]
-        public int Retries { get; set; }
-            
-        [Option('c',"cachepath",Required =false,Default=null,HelpText = "Directory location to store cache data")]
-        public string? CachePath { get; set; }
+        public int Retries { get; [UsedImplicitly] set; }
+
+        [Option('c',"cachePath",Required =false,Default=null,HelpText = "Directory location to store cache data")]
+        public string? CachePath { get; [UsedImplicitly] set; }
     }
 
-    public static void Scan(Options o, string dbpath, int retries = 10, FileSystem? fs = null)
+    private static void Scan(Options o, string dbpath, int retries = 10, FileSystem? fs = null)
     {
         fs ??= new FileSystem();
         var cwd = fs.Directory.GetCurrentDirectory();
 
         if (o.Debug)
             Console.WriteLine($"Caching in '{dbpath}'");
-        Directory.CreateDirectory(Path.GetDirectoryName(dbpath));
+        Directory.CreateDirectory(Path.GetDirectoryName(dbpath) ??
+                                  throw new FileNotFoundException($"Unable to locate '{dbpath}'"));
         var dbs = new SqliteConnectionStringBuilder
         {
             DataSource = dbpath
@@ -57,13 +61,13 @@ public static class FileStats
             {
                 setSeen.Parameters["@name"] = new SqliteParameter("@name", dir);
                 if (setSeen.ExecuteNonQuery() != 0) continue;
+
                 long num = 0, vol = 0;
 
                 // Cache miss: find the size the hard way, then cache it
-                foreach (var f in fs.Directory.EnumerateFiles(Path.Combine(cwd, dir), "*",
-                             SearchOption.AllDirectories))
+                foreach (var info in fs.Directory.EnumerateFiles(Path.Combine(cwd, dir), "*",
+                             SearchOption.AllDirectories).Select(f => fs.FileInfo.New(f)))
                 {
-                    var info = fs.FileInfo.FromFileName(f);
                     num++;
                     vol += info.Length;
                 }
@@ -103,11 +107,12 @@ public static class FileStats
         trans.Commit();
     }
 
-    static string BytesToString(long byteCount)
+    private static string BytesToString(long byteCount)
     {
-        string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+        string[] suf = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]; //Longs run out around EB
         if (byteCount == 0)
-            return "0" + suf[0];
+            return $"0{suf[0]}";
+
         var bytes = Math.Abs(byteCount);
         var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
         var num = Math.Round(bytes / Math.Pow(1024, place), 1);
@@ -117,6 +122,6 @@ public static class FileStats
     public static void Main(string[] args)
     {
         var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
-        Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o,o.CachePath??path, o.Retries)).WithNotParsed(o=>Console.WriteLine($"{o}"));
+        Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o,o.CachePath??path, o.Retries)).WithNotParsed(static o=>Console.WriteLine($"{o}"));
     }
 }
