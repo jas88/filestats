@@ -1,22 +1,39 @@
 name: Test and publish
 
 on:
-  ["push","pull_request"]
+  "push"
 
 jobs:
   build:
     name: Publish binaries
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-dotnet@v3.2.0
       with:
-        dotnet-version: '6.x'
+        dotnet-version: '8.x'
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: 'csharp'
+        queries: +security-and-quality
+
     - name : coverlet
       run: |
         dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
         mv Tests.FileStats/TestResults/*/coverage.info lcov.info
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:csharp"
+
     - name: coveralls      
       uses: coverallsapp/github-action@v2.2.3
       with:
