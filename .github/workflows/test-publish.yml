@@ -35,7 +35,7 @@ jobs:
         category: "/language:csharp"
 
     - name: coveralls      
-      uses: coverallsapp/github-action@v2.2.3
+      uses: coverallsapp/github-action@v2.3.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN }} 
         path-to-lcov: 'lcov.info'
