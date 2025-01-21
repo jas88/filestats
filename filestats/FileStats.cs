@@ -13,14 +13,15 @@ namespace fileStats;
 public static class FileStats
 {
     [UsedImplicitly]
-    public sealed class Options {
-        [Option('d',"debug",Required =false,HelpText ="Show debug information while running")]
+    public sealed class Options
+    {
+        [Option('d', "debug", Required = false, HelpText = "Show debug information while running")]
         public bool Debug { get; [UsedImplicitly] set; }
 
-        [Option('r',"retries",Required = false,Default = 10,HelpText="How many times to retry after errors")]
+        [Option('r', "retries", Required = false, Default = 10, HelpText = "How many times to retry after errors")]
         public int Retries { get; [UsedImplicitly] set; }
 
-        [Option('c',"cachePath",Required =false,Default=null,HelpText = "Directory location to store cache data")]
+        [Option('c', "cachePath", Required = false, Default = null, HelpText = "Directory location to store cache data")]
         public string? CachePath { get; [UsedImplicitly] set; }
     }
 
@@ -81,14 +82,14 @@ public static class FileStats
             {
                 Console.Error.WriteLine($"Error scanning '{dir}': '{e}'");
                 trans.Commit();
-                if (retries>0)
-                    Scan(o,dbpath, retries-1, fs);
+                if (retries > 0)
+                    Scan(o, dbpath, retries - 1, fs);
                 return;
             }
         }
 
         // Now expire old entries and report the totals:
-        using (var cleanup = new SqliteCommand("DELETE FROM dirCache WHERE parent=@parent AND seen=0",db,trans))
+        using (var cleanup = new SqliteCommand("DELETE FROM dirCache WHERE parent=@parent AND seen=0", db, trans))
         {
             cleanup.Parameters.AddWithValue("@parent", cwd);
             var n = cleanup.ExecuteNonQuery();
@@ -100,10 +101,11 @@ public static class FileStats
                new SqliteCommand("SELECT COUNT(*),SUM(num),SUM(vol) FROM dirCache WHERE parent=@parent", db, trans))
         {
             stats.Parameters.AddWithValue("@parent", cwd);
-            var r=stats.ExecuteReader();
+            var r = stats.ExecuteReader();
             r.Read();
             Console.WriteLine($"Found {r.GetInt64(0)} directories containing {r.GetInt64(1)} files, total {r.GetInt64(2)} bytes ({BytesToString(r.GetInt64(2))})");
         }
+
         trans.Commit();
     }
 
@@ -122,6 +124,6 @@ public static class FileStats
     public static void Main(string[] args)
     {
         var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
-        Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o,o.CachePath??path, o.Retries)).WithNotParsed(static o=>Console.WriteLine($"{o}"));
+        Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o, o.CachePath ?? path, o.Retries)).WithNotParsed(static o => Console.WriteLine($"{o}"));
     }
 }
