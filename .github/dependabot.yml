@@ -1,14 +1,158 @@
+# Dependabot configuration for automated dependency updates
+# This file provides consistent dependency management across all repositories
+
 version: 2
 updates:
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: weekly
-- package-ecosystem: nuget
-  directory: "/"
-  schedule:
-    interval: weekly
-- package-ecosystem: "dotnet-sdk"
-  directory: "/"
-  schedule:
-    interval: weekly
+  # Monitor .NET NuGet packages
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "dotnet"
+    groups:
+      # Group Microsoft packages together
+      microsoft-packages:
+        patterns:
+          - "Microsoft.*"
+        dependency-type: "development"
+
+      # Group System packages together
+      system-packages:
+        patterns:
+          - "System.*"
+        dependency-type: "development"
+
+      # Group testing packages together
+      testing-packages:
+        patterns:
+          - "xunit*"
+          - "nunit*"
+          - "mstest*"
+          - "coverlet*"
+          - "Moq*"
+        dependency-type: "development"
+
+      # Group AWS SDK packages (relevant for RDMP)
+      aws-packages:
+        patterns:
+          - "AWSSDK.*"
+        dependency-type: "development"
+
+  # Monitor .NET SDK version in global.json
+  - package-ecosystem: "dotnet-sdk"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "sdk"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "dotnet-sdk"
+
+  # Monitor GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Monitor Docker base images (if applicable)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # Monitor npm packages (for Node.js tooling/build scripts)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "nodejs"
+    groups:
+      npm-packages:
+        patterns:
+          - "*"
+
+  # Monitor pip packages (for Python tooling/scripts)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jas88"
+    assignees:
+      - "jas88"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      python-packages:
+        patterns:
+          - "*"
