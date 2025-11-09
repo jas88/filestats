@@ -7,7 +7,7 @@
     <!-- Production Dependencies -->
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.10" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta5.25277.114" />
-    <PackageVersion Include="System.IO.Abstractions" Version="21.2.1" />
+    <PackageVersion Include="System.IO.Abstractions" Version="22.0.16" />
 
     <!-- Test Dependencies -->
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
