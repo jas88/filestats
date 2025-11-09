@@ -2,11 +2,13 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
   <ItemGroup>
     <!-- Production Dependencies -->
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.1" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.10" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta5.25277.114" />
     <PackageVersion Include="System.IO.Abstractions" Version="21.2.1" />
+
     <!-- Test Dependencies -->
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
