@@ -11,6 +11,6 @@
 		<PackageReference Include="JetBrains.Annotations" />
 		<PackageReference Include="Microsoft.Data.Sqlite" />
 		<PackageReference Include="System.IO.Abstractions" />
-		<PackageReference Include="CommandLineParser" />
+		<PackageReference Include="System.CommandLine" />
 	</ItemGroup>
 </Project>
