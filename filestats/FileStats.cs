@@ -153,7 +153,7 @@ public static class FileStats
                 CachePath = cachePath
             };
 
-            var defaultPath = Path.Combine(
+            var defaultPath = Path.Join(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "fileStats",
                 "cache.db");
