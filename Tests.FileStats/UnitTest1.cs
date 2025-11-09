@@ -14,6 +14,6 @@ file sealed class Tests
         Console.SetOut(stdout);
         Console.SetError(stderr);
         fileStats.FileStats.Main(["--bad"]);
-        Assert.That(stderr.ToString(), Does.Contain("Option 'bad' is unknown"));
+        Assert.That(stderr.ToString(), Does.Contain("Unrecognized command or argument"));
     }
 }

@@ -1,28 +1,21 @@
 ﻿using System;
+using System.CommandLine;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using CommandLine;
-using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
 
 namespace fileStats;
 
 public static class FileStats
 {
-    [UsedImplicitly]
     public sealed class Options
     {
-        [Option('d', "debug", Required = false, HelpText = "Show debug information while running")]
-        public bool Debug { get; [UsedImplicitly] set; }
-
-        [Option('r', "retries", Required = false, Default = 10, HelpText = "How many times to retry after errors")]
-        public int Retries { get; [UsedImplicitly] set; }
-
-        [Option('c', "cachePath", Required = false, Default = null, HelpText = "Directory location to store cache data")]
-        public string? CachePath { get; [UsedImplicitly] set; }
+        public bool Debug { get; set; }
+        public int Retries { get; set; }
+        public string? CachePath { get; set; }
     }
 
     private static void Scan(Options o, string dbpath, int retries = 10, FileSystem? fs = null)
@@ -121,9 +114,53 @@ public static class FileStats
         return $"{(Math.Sign(byteCount) * num).ToString(CultureInfo.InvariantCulture)}{suf[place]}";
     }
 
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fileStats", "cache.db");
-        Parser.Default.ParseArguments<Options>(args).WithParsed(o => Scan(o, o.CachePath ?? path, o.Retries)).WithNotParsed(static o => Console.WriteLine($"{o}"));
+        var debugOption = new Option<bool>("--debug", "-d");
+        debugOption.Description = "Show debug information while running";
+
+        var retriesOption = new Option<int>("--retries", "-r");
+        retriesOption.Description = "How many times to retry after errors";
+        retriesOption.Arity = ArgumentArity.ZeroOrOne;
+
+
+        var cachePathOption = new Option<string?>("--cachePath", "-c");
+        cachePathOption.Description = "Directory location to store cache data";
+
+        var rootCommand = new RootCommand("File statistics scanner with caching")
+        {
+            debugOption,
+            retriesOption,
+            cachePathOption
+        };
+
+        rootCommand.SetAction(parseResult =>
+        {
+            var debug = parseResult.GetValue(debugOption);
+            var retries = parseResult.GetValue(retriesOption);
+            var cachePath = parseResult.GetValue(cachePathOption);
+
+            // Apply default for retries if not specified
+            if (retries == 0 && !parseResult.Tokens.Any(t => t.Value.Contains("retries")))
+            {
+                retries = 10;
+            }
+
+            var options = new Options
+            {
+                Debug = debug,
+                Retries = retries,
+                CachePath = cachePath
+            };
+
+            var defaultPath = Path.Join(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "fileStats",
+                "cache.db");
+
+            Scan(options, options.CachePath ?? defaultPath, options.Retries);
+        });
+
+        return rootCommand.Parse(args).Invoke();
     }
 }
