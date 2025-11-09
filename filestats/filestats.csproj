@@ -5,6 +5,9 @@
 		<TargetFramework>net$(NETCoreAppMaximumVersion)</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
+		<PublishAot>true</PublishAot>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
 	</PropertyGroup>
 
 	<ItemGroup>
