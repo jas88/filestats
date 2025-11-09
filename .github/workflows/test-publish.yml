@@ -13,11 +13,11 @@ jobs:
       security-events: write
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-dotnet@v4.2.0
+    - uses: actions/checkout@v5
+    - uses: actions/setup-dotnet@v5.0.0
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: 'csharp'
         queries: +security-and-quality
@@ -28,12 +28,12 @@ jobs:
         mv Tests.FileStats/TestResults/*/coverage.info lcov.info
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
       with:
         category: "/language:csharp"
 
     - name: coveralls      
-      uses: coverallsapp/github-action@v2.3.4
+      uses: coverallsapp/github-action@v2.3.6
       with:
         github-token: ${{secrets.GITHUB_TOKEN }} 
         path-to-lcov: 'lcov.info'
