@@ -6,8 +6,8 @@
   <ItemGroup>
     <!-- Production Dependencies -->
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.0" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.0-rc.2.25502.107" />
-    <PackageVersion Include="System.IO.Abstractions" Version="22.0.16" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.0" />
+    <PackageVersion Include="System.IO.Abstractions" Version="22.1.0" />
 
     <!-- Test Dependencies -->
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
@@ -15,6 +15,6 @@
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="6.0.0" />
-    <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="22.0.16" />
+    <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="22.1.0" />
   </ItemGroup>
 </Project>
