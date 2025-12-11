@@ -11,9 +11,8 @@
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
-  <!-- Package Metadata -->
+  <!-- Package Metadata (Authors/Company inherited from shared config) -->
   <PropertyGroup>
-    <Company>James A Sutherland</Company>
     <Product>FileStats</Product>
     <Copyright>Copyright © 2025 James A Sutherland</Copyright>
     <PackageProjectUrl>https://github.com/jas88/filestats</PackageProjectUrl>
