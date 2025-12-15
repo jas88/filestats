@@ -47,7 +47,7 @@ jobs:
         global-json-file: global.json
 
     - name: Cache NuGet packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.sln') }}
@@ -79,7 +79,7 @@ jobs:
 
     - name: Upload NuGet packages
       if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: nuget-packages
         path: ./packages/*.nupkg
@@ -217,7 +217,7 @@ jobs:
 
     steps:
     - name: Download NuGet packages
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         name: nuget-packages
         path: ./packages
