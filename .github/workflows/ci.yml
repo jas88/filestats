@@ -61,13 +61,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore -p:ContinuousIntegrationBuild=true
 
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./TestResults/
+      run: dotnet test --configuration Release --no-build --verbosity normal --coverage --coverage-output-format cobertura --results-directory ./TestResults/
 
     - name: Upload coverage reports
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v5
       with:
-        files: ./TestResults/**/coverage.cobertura.xml
+        files: ./TestResults/*.cobertura.xml
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
