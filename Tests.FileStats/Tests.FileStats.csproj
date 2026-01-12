@@ -4,9 +4,14 @@
         <IsPackable>false</IsPackable>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <!-- Enable Microsoft Testing Platform (NUnit runner) -->
+        <EnableNUnitRunner>true</EnableNUnitRunner>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Fix dependency version conflict with NUnit3TestAdapter -->
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="NUnit" />
         <PackageReference Include="NUnit.Analyzers">
@@ -14,7 +19,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" />
-        <!-- coverlet.collector is provided by shared Directory.Build.props -->
+        <!-- Microsoft.Testing.Extensions.CodeCoverage provided by shared build-standards -->
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     </ItemGroup>
 
