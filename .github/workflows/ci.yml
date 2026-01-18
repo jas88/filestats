@@ -62,7 +62,7 @@ jobs:
 
     - name: Run tests with coverage (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: dotnet test --configuration Release --no-build --verbosity normal --coverage --coverage-output-format cobertura --results-directory ./TestResults/
+      run: dotnet test --configuration Release --no-build --verbosity normal --results-directory ./TestResults/ -- --coverage --coverage-output-format cobertura --coverage-settings coverage.settings
 
     - name: Run tests (Windows/macOS)
       if: matrix.os != 'ubuntu-latest'
