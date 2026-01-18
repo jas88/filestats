@@ -2,6 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net$(NETCoreAppMaximumVersion)</TargetFramework>
         <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <!-- Enable Microsoft Testing Platform (NUnit runner) -->
