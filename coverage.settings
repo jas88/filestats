@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <CodeCoverage>
+    <!-- Disable static instrumentation (causes crash) -->
+    <EnableStaticManagedInstrumentation>false</EnableStaticManagedInstrumentation>
+    <EnableStaticNativeInstrumentation>false</EnableStaticNativeInstrumentation>
+    <!-- Enable dynamic instrumentation -->
+    <EnableDynamicManagedInstrumentation>true</EnableDynamicManagedInstrumentation>
+    <EnableDynamicNativeInstrumentation>false</EnableDynamicNativeInstrumentation>
+  </CodeCoverage>
+</Configuration>
