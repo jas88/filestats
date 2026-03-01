@@ -15,7 +15,7 @@
 
     <!-- Test Dependencies -->
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.3.1" />
     <PackageVersion Include="NUnit" Version="4.5.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
