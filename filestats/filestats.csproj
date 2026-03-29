@@ -11,6 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+  	<PackageReference Include="DotNet.ReproducibleBuilds" />
 		<PackageReference Include="Microsoft.Data.Sqlite" />
 		<PackageReference Include="System.IO.Abstractions" />
 		<PackageReference Include="System.CommandLine" />
