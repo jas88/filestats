@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite" />
+		<PackageReference Include="MinVer" />
 		<PackageReference Include="System.IO.Abstractions" />
 		<PackageReference Include="System.CommandLine" />
 	</ItemGroup>
