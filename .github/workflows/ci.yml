@@ -211,7 +211,7 @@ jobs:
         submodules: recursive
 
     - name: Dependency Review
-      uses: actions/dependency-review-action@v4
+      uses: actions/dependency-review-action@v5
 
   publish:
     name: Publish to NuGet
