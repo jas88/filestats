@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CommandLine;
 using System.Data;
 using System.Globalization;
@@ -54,7 +54,8 @@ public static class FileStats
             try
             {
                 setSeen.Parameters["@name"] = new SqliteParameter("@name", dir);
-                if (setSeen.ExecuteNonQuery() != 0) continue;
+                if (setSeen.ExecuteNonQuery() != 0)
+                    continue;
 
                 long num = 0, vol = 0;
 
