@@ -2,12 +2,10 @@
     <PropertyGroup>
         <TargetFramework>net$(NETCoreAppMaximumVersion)</TargetFramework>
         <IsPackable>false</IsPackable>
-        <IsTestProject>true</IsTestProject>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-        <!-- Enable Microsoft Testing Platform (NUnit runner) -->
-        <EnableNUnitRunner>true</EnableNUnitRunner>
-        <OutputType>Exe</OutputType>
+        <!-- IsTestProject is set in the root Directory.Build.props, so build-standards enables
+             Microsoft Testing Platform here (EnableNUnitRunner, OutputType=Exe) -->
     </PropertyGroup>
 
     <ItemGroup>
