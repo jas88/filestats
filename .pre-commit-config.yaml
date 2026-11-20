@@ -1,4 +1,5 @@
 # Pre-commit hooks for jas88 .NET projects
+# The hooks need Python 3.9 or later, the minimum for pre-commit-hooks v6.0.0.
 # Install: pip install pre-commit && pre-commit install
 # (installs the pre-commit, pre-push and commit-msg hooks, as listed in default_install_hook_types)
 
@@ -6,7 +7,7 @@ default_install_hook_types: [pre-commit, pre-push, commit-msg]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         exclude: '\.md$'
@@ -22,7 +23,7 @@ repos:
         args: ['--fix=lf']
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.4
+    rev: v8.30.1
     hooks:
       - id: gitleaks
 
@@ -54,7 +55,7 @@ repos:
 
 # Commit message format (conventional commits)
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.4.0
+    rev: v4.5.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
