@@ -1,5 +1,15 @@
 <Project>
-  <!-- Import shared build standards -->
+  <!--
+    Mark test projects before the shared import, so build-standards applies its Microsoft Testing
+    Platform settings (NUnit runner, OutputType=Exe, code coverage extension) to them. Its own
+    detection only matches *.Tests / *.Test names and tests/ or test/ directories, and an
+    IsTestProject set in a csproj is evaluated too late for it. filestats names its test projects Tests.*.
+  -->
+  <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('Tests.'))">
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Import shared build standards AFTER marking test projects -->
   <Import Project="build-standards/Directory.Build.props.shared" />
 
   <!-- Local overrides and repo-specific settings -->
