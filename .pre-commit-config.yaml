@@ -1,4 +1,5 @@
 # Pre-commit hooks for jas88 .NET projects
+# The hooks need Python 3.9 or later, the minimum for pre-commit-hooks v6.0.0.
 # Install: pip install pre-commit && pre-commit install
 # (installs the pre-commit, pre-push and commit-msg hooks, as listed in default_install_hook_types)
 
