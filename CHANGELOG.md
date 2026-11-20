@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial release of FileStats utility
 - Directory scanning with caching support
 - SQLite-based cache for performance
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-platform release binaries (linux-x64, linux-arm64, win-x64, win-arm64, osx-x64, osx-arm64)
 
 ### Changed
+
 - Consolidated GitHub Actions workflows into single CI/CD pipeline
 - Optimized for speed with IlcOptimizationPreference setting
 - Native binaries now published as release assets with SHA256 checksums
